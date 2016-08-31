@@ -2,6 +2,7 @@ buildscript {
     ext {
         assetPipelineVersion = "2.7.2"
         jobDslVersion = "1.50"
+        gradleDockerVersion = "3.0.2"
     }
     repositories {
         maven { url "http://oss.jfrog.org/artifactory/repo" }
@@ -12,6 +13,7 @@ buildscript {
         classpath "com.github.jengelman.gradle.plugins:shadow:1.2.2"
         classpath "com.bertramlabs.plugins:asset-pipeline-gradle:${assetPipelineVersion}"
         classpath "com.bertramlabs.plugins:less-asset-pipeline:${assetPipelineVersion}"
+        classpath "com.bmuschko:gradle-docker-plugin:${gradleDockerVersion}"
     }
 }
 
@@ -20,6 +22,9 @@ buildscript {
 apply plugin: "io.ratpack.ratpack-groovy"
 apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: "asset-pipeline"
+// docker
+apply plugin: 'com.bmuschko.docker-java-application'
+
 
 // The “ratpack” plugin is IDEA aware.
 // It will create a run configuration in IDEA to launch your app in your IDE, with hot reloading.
@@ -71,4 +76,20 @@ shadowJar {
 
 task stage {
     dependsOn shadowJar
+}
+
+// docker build -t ratpack-sample/job-dsl-playground:1.0 ./build/docker/
+// docker run -d --name job-dsl-playground -p 80:5050 ratpack-sample/job-dsl-playground:1.0
+docker {
+    url = project.hasProperty('dockerUrl') ?
+                project.getProperty('dockerUrl') :
+                System.env.DOCKER_HOST.replace('tcp', 'http')
+ 
+    // Configuration for Java application image.
+    javaApplication {
+        baseImage = 'openjdk:8-jre'
+        maintainer = 'manboubird'
+        port = 5050
+        tag = 'ratpack-sample/job-dsl-playground:1.0'
+    }
 }
