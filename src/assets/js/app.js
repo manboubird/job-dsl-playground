@@ -29,7 +29,7 @@
                 that.save();
             });
 
-            this.showXmlEditor('XML', '');
+            this.showXmlEditor('DSL Output', '');
 
             $('body').css('visibility', 'visible');
         },
@@ -78,7 +78,8 @@
         initEditors: function() {
             this.inputEditor = CodeMirror.fromTextArea($('.input textarea')[0], {
                 matchBrackets: true,
-                mode: 'groovy',
+                mode: 'toml',
+                // mode: {name: "javascript", json: true},
                 lineNumbers: true,
                 tabSize: 4,
                 indentUnit: 4,
@@ -91,7 +92,7 @@
             });
             this.outputEditor = CodeMirror.fromTextArea($('.output textarea')[0], {
                 matchBrackets: true,
-                mode: 'xml',
+                mode: 'sql',
                 lineNumbers: true,
                 foldGutter: true,
                 gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
@@ -124,10 +125,10 @@
                 title = 'Error';
                 output = resp.stacktrace;
             } else {
-                title = 'XML';
+                title = 'DSL Output';
                 output = _.map(resp.results, function(it, idx) {
                     var name = it.name || '[no name]';
-                    return '<!-- ' + (idx + 1) + '. ' + name + ' -->\n' + it.xml;
+                    return '-- ' + (idx + 1) + '. ' + name + '\n' + it.content;
                 }).join('\n');
             }
 

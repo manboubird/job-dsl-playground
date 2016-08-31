@@ -29,10 +29,12 @@ class CustomSecurityManager extends SecurityManager {
 
     void checkAccept(String host, int port) { failIfRestricted() }
 
-    void checkAccess(Thread t) { failIfRestricted() }
+//    void checkAccess(Thread t) { failIfRestricted() }
+    void checkAccess(Thread t) { }
 
-    void checkAccess(ThreadGroup g) { failIfRestricted() }
-
+//    void checkAccess(ThreadGroup g) { failIfRestricted() }
+	void checkAccess(ThreadGroup g) {  }
+	
     void checkAwtEventQueueAccess() { failIfRestricted() }
 
     void checkConnect(String host, int port) { failIfRestricted() }
@@ -43,8 +45,9 @@ class CustomSecurityManager extends SecurityManager {
 
     void checkDelete(String file) { failIfRestricted() }
 
-    void checkExec(String cmd) { failIfRestricted() }
-
+//    void checkExec(String cmd) { failIfRestricted() }
+	void checkExec(String cmd) { }
+	
     void checkExit(final int code) { failIfRestricted() }
 
     void checkLink(String lib) { failIfRestricted() }
@@ -73,10 +76,12 @@ class CustomSecurityManager extends SecurityManager {
 
     void checkSystemClipboardAccess() { failIfRestricted() }
 
-    void checkWrite(FileDescriptor fd) { failIfRestricted() }
+//    void checkWrite(FileDescriptor fd) { failIfRestricted() }
+    void checkWrite(FileDescriptor fd) {  }
 
-    void checkWrite(String file) { failIfRestricted() }
-
+//    void checkWrite(String file) { failIfRestricted() }
+	void checkWrite(String file) {  }
+	
     static void failIfRestricted() {
         if (restrict.get()) {
             throw new SecurityException("not allowed!")

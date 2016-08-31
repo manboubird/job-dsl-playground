@@ -1,0 +1,4 @@
+---
+app:
+  shellCommand: 'cat'
+  inputDataBaseDir: '/tmp/'

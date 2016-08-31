@@ -10,7 +10,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Jenkins Job DSL Playground</title>
+    <title>DSL Playground</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
 
@@ -27,8 +27,7 @@
 </head>
 <body style="visibility: hidden">
 <div class="header">
-    <h1>Jenkins Job DSL Playground</h1>
-    <span class="docs"><a href="https://github.com/jenkinsci/job-dsl-plugin/wiki/Job-DSL-Commands">Docs</a></span>
+    <h1>DSL Playground</h1>
     <% if (model.id) {%>
     <span class="gist">
         <a href="https://gist.github.com/${model.id}"><i class="fa fa-github"></i> ${model.id}</a>
@@ -38,7 +37,7 @@
 <div class="main">
 <div class="input">
     <div class="title">
-        <span class="source-type">Groovy</span>
+        <span class="source-type">Configuration</span>
         <div class="controls">
             <button class="btn btn-default execute"><i class="fa fa-play"></i> Run</button>
             <!--<button class="btn btn-default save"><i class="fa fa-save"></i> Save</button>-->
@@ -47,23 +46,20 @@
     </div>
     <div class="content">
         <textarea>
-job('ci') {
-    description 'Build and test the app.'
-    scm {
-        github 'sheehan/job-dsl-playground'
-    }
-    steps {
-        gradle 'test'
-    }
-    publishers {
-        archiveJunit 'build/test-results/**/*.xml'
-    }
-}
-        </textarea>
+# Toml
+
+[select_table]
+
+select = ["id", "some_col", "create_time", "modify_time", "version"]
+table = "my_table"
+where = """
+id = 'my_id'
+"""
+</textarea>
     </div>
 </div>
 <div class="output">
-    <div class="title"><span class="source-type">XML</span></div>
+    <div class="title"><span class="source-type">DSL Output</span></div>
     <div class="content">
         <div class="code-wrapper">
             <textarea></textarea>
@@ -72,8 +68,7 @@ job('ci') {
 </div>
 </div>
 <div class="footer">
-    <span class="version">Job DSL version: ${javaposse.jobdsl.dsl.DslFactory.package.implementationVersion}</span>
-    <span class="playground-source"><a href="https://github.com/sheehan/job-dsl-playground">Source</a></span>
+    <span class="playground-source"><a href="https://github.com/sheehan/job-dsl-playground">Original job-dsl-playground Source</a></span>
 </div>
 
 <div class="modal hide fade">
@@ -96,9 +91,9 @@ job('ci') {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.2/codemirror.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.2/addon/fold/foldcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.2/addon/fold/foldgutter.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.2/addon/fold/xml-fold.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.2/mode/groovy/groovy.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.2/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.2/mode/toml/toml.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.2/mode/javascript/javascript.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.2/mode/sql/sql.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-layout/1.4.3/jquery.layout.min.js"></script>
 <script src="/assets/app.js"></script>
@@ -106,16 +101,6 @@ job('ci') {
     jQuery(function(){
         App.start(${model.json});
     });
-</script>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-52261717-1', 'auto');
-  ga('send', 'pageview');
-
 </script>
 </body>
 </html>

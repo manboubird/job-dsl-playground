@@ -1,39 +1,45 @@
 package com.sheehan.jobdsl
 
-import javaposse.jobdsl.dsl.DslScriptLoader
-import javaposse.jobdsl.dsl.MemoryJobManagement
-import javaposse.jobdsl.dsl.ScriptRequest
 import org.codehaus.groovy.control.MultipleCompilationErrorsException
 import org.codehaus.groovy.runtime.StackTraceUtils
 
-class DslScriptExecutor implements ScriptExecutor {
+import ratpack.config.ConfigData
 
-    ScriptResult execute(String scriptText, ScriptConfig scriptConfig) {
-       return execute(scriptText)
-    }
+class ShellScriptExecutor implements ScriptExecutor {
 
     ScriptResult execute(String scriptText) {
+        final ScriptConfig scriptConfig
+        return execute(scriptText, scriptConfig);
+    }
+
+    ScriptResult execute(String scriptText, ScriptConfig scriptConfig) {
 
         def stackTrace = new StringWriter()
         def errWriter = new PrintWriter(stackTrace)
 
         def emcEvents = []
-        def listener = { MetaClassRegistryChangeEvent event ->
-            emcEvents << event
-        } as MetaClassRegistryChangeEventListener
+        def listener = { MetaClassRegistryChangeEvent event -> emcEvents << event } as MetaClassRegistryChangeEventListener
 
         GroovySystem.metaClassRegistry.addMetaClassRegistryChangeEventListener listener
 
         ScriptResult scriptResult = new ScriptResult()
         try {
             CustomSecurityManager.restrictThread()
-            MemoryJobManagement jm = new MemoryJobManagement()
 
-            ScriptRequest scriptRequest = new ScriptRequest(null, scriptText, new File('.').toURI().toURL())
-            DslScriptLoader.runDslEngine(scriptRequest, jm)
+            def baseDir = scriptConfig.inputDataBaseDir
+            def fn = 'input.txt'
+            new File(baseDir, fn).withWriter('utf-8') { writer ->
+                writer.write(scriptText)
+            }
+            def cmd = scriptConfig.getShellCommand() + " " + baseDir + fn
+            def p = cmd.execute()
+            def ret = p.err.text
+            if(ret == '') {
+                ret = p.text
+            }
 
-            scriptResult.results = jm.savedConfigs.collect { [name: it.key, xml: it.value] }
-            scriptResult.results += jm.savedViews.collect { [name: it.key, xml: it.value] }
+            def list = [out:ret].collect { [name: it.key, content: it.value] }
+            scriptResult.results = list
         } catch (MultipleCompilationErrorsException e) {
             stackTrace.append(e.message - 'startup failed, Script1.groovy: ')
         } catch (Throwable t) {
