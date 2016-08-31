@@ -1,4 +1,4 @@
 ---
 app:
-  shellCommand: 'cat'
+  shellCommand: '/usr/bin/env python3 ./script/python/convert.py'
   inputDataBaseDir: '/tmp/'
