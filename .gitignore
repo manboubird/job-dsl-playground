@@ -5,6 +5,7 @@
 .envrc
 .settings/
 *.swp
+*.swo
 build
 .gradle
 out

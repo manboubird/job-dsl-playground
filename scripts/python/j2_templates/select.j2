@@ -1,0 +1,10 @@
+SELECT
+{%- for col in dic.select %}
+  {{ col }}{% if not loop.last -%},{% endif -%}
+{% endfor %}
+FROM
+  {{ dic.table }}
+{% if dic.where is defined -%}
+WHERE
+  {{ dic.where }}
+{%- endif -%}
