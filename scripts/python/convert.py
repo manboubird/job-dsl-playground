@@ -16,10 +16,15 @@ with open(fname) as f:
 
 template_filename = 'select.j2'
 loader = FileSystemLoader(searchpath = SCRIPT_DIR_PATH + "/j2_templates", encoding = 'utf8')
-env = Environment(loader = loader)
+env = Environment(
+    loader = loader,
+    keep_trailing_newline=True, # newline-terminate generated files
+    lstrip_blocks=True,  # so can indent control flow tags
+    trim_blocks=True)  # so don't need {%- -%} everywhere
+
 tpl = env.get_template(template_filename)
 
-content = tpl.render({'dic': config['select_table']})
+content = tpl.render({'dic': config['select_table'], 'template_filename': template_filename})
 
 # print(toml.dumps(config), file=sys.stdout)
 # print('---', file=sys.stdout)

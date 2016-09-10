@@ -1,10 +1,10 @@
+{% from 'macros.j2' import header %}
+{{header(template_filename)}}
 SELECT
-{%- for col in dic.select %}
-  {{ col }}{% if not loop.last -%},{% endif -%}
-{% endfor %}
+  {{dic.select|join(', \n')|indent(2)}}
 FROM
-  {{ dic.table }}
-{% if dic.where is defined -%}
+  {{dic.table}}
+{% if dic.where is defined %}
 WHERE
-  {{ dic.where }}
-{%- endif -%}
+  {{dic.where|indent(2)}}
+{% endif %}
